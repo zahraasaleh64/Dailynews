@@ -36,11 +36,20 @@ void updateNews(Function(bool) update) async {
       try {
         final jsonResponse = convert.jsonDecode(response.body);
         for (var row in jsonResponse) {
+          String rawImageUrl = row['image_url'] ?? '';
+          String finalImageUrl = rawImageUrl;
+          
+          // If the image is on our server, use the proxy for CORS compatibility
+          if (rawImageUrl.contains('atwebpages.com/uploads/')) {
+            String fileName = rawImageUrl.split('uploads/').last;
+            finalImageUrl = 'http://fatimamobile.atwebpages.com/view_image.php?path=uploads/' + fileName;
+          }
+
           News n = News(
             int.parse(row['nid']),
             row['title'],
             row['content'],
-            row['image_url'] ?? '',
+            finalImageUrl,
             row['published_date'],
             row['category'] ?? 'General'
           );
@@ -67,11 +76,19 @@ void searchNews(Function(List<News>) update, String term) async {
       final jsonResponse = convert.jsonDecode(response.body);
       List<News> results = [];
       for (var row in jsonResponse) {
+        String rawImageUrl = row['image_url'] ?? '';
+        String finalImageUrl = rawImageUrl;
+        
+        if (rawImageUrl.contains('atwebpages.com/uploads/')) {
+          String fileName = rawImageUrl.split('uploads/').last;
+          finalImageUrl = 'http://fatimamobile.atwebpages.com/view_image.php?path=uploads/' + fileName;
+        }
+
         News n = News(
           int.parse(row['nid']),
           row['title'],
           row['content'],
-          row['image_url'] ?? '',
+          finalImageUrl,
           row['published_date'],
           row['category'] ?? 'General'
         );

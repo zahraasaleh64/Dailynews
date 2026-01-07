@@ -17,7 +17,7 @@ class _AddCategoryState extends State<AddCategory> {
   bool _loading = false;
 
   @override
-  void dispose() {
+  void dispose() { //Frees memory when screen is closed
     _nameController.dispose();
     super.dispose();
   }

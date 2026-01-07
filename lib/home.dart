@@ -27,7 +27,7 @@ class _HomeState extends State<Home> {
       _error = false;
     });
     updateNews((success) {
-      if (mounted) {
+      if (mounted) { //widget is still on screen
         setState(() {
           _loading = false;
           _error = !success;
